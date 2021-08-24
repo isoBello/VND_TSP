@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from distancias import calculadora
+from .distancias import calculadora
+from .vnd import Main
 
 def Grafo():
     header = []
@@ -17,7 +18,7 @@ def Grafo():
             coordenadas[v] = (x, y)
             line = next(f)
 
-    return qtd_vertices, coordenadas, tipo_dist
+    return qtd_vertices + 1, coordenadas, tipo_dist
            
 
 def infogetter(head):
@@ -43,6 +44,8 @@ if __name__ == "__main__":
     vertices, coordenadas, tipo_dist = Grafo()
 
     if "GEO" in tipo_dist:
-        distancias = calculadora(vertices + 1, coordenadas, 0)
+        distancias = calculadora(vertices, coordenadas, 0)
     else:
-        distancias = calculadora(vertices + 1, coordenadas, 1)
+        distancias = calculadora(vertices, coordenadas, 1)
+
+    solucao = Main(vertices, distancias)

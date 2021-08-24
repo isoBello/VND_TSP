@@ -29,7 +29,7 @@ def calcular_distancia(_x, _y, x, y, tipo):
         euc(_x - x, _y - y)
 
 
-def geo(x, y, lat_a, lat_b, long_a, long_b):
+def geo(y, lat_a, lat_b, long_a, long_b):
     raio = 6372.795477598
     distancia = raio * acos(sin(lat_a) * sin(lat_b) + cos(lat_a) * cos(lat_b) * cos(y)) 
     return distancia

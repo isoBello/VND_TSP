@@ -1,22 +1,26 @@
 #!/VND_TSP/virtual/bin python3.6
 # -*- coding: utf-8 -*-
-from construtiva import heuristica_construtiva
-from neighborhood import vizinhança 
+from .construtiva import heuristica_construtiva
+from .neighborhood import vizinhança
 
-def VND():
-    x = heuristica_construtiva()
+def VND(s_inicial):
     vizinhanças = 4
-    melhor_solucao = x
-    aux = 0
+    s = s_inicial
+    k = 0
 
-    while aux < vizinhanças:
-        primeiro_aprimorante = vizinhança(aux, x)
-        if fitness(primeiro_aprimorante) < fitness(x):
-            melhor_solucao = primeiro_aprimorante
-            aux = 0
+    while k < vizinhanças:
+        s_linha = vizinhança(k, s)
+        if fitness(s_linha) < fitness(s):
+            s = s_linha
+            k = 0
         else:
-            aux += 1
-    return melhor_solucao
+            k += 1
+    return s
 
 def fitness(s):
     return s[0]
+
+
+def Main(vertices, distancias):
+    s_inicial = heuristica_construtiva(vertices, distancias)
+    return VND(s_inicial)
