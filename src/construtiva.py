@@ -34,5 +34,6 @@ def heuristica_construtiva(vertices, distancias):
     for v in distancias.get(caminho[0]):
         if v[0] == caminho[-1]:
             dist_total += v[1]
+            caminho.append(caminho[0])
             break
     return (dist_total, caminho) 
