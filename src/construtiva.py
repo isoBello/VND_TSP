@@ -40,38 +40,30 @@ def heuristica_construtiva(vertices, distancias):
     return (dist_total, caminho) 
 
 
-def construtor(u, v, w, k, caminho, distancias, custo):
-    novo_caminho = []
-    i, aux = 0, len(caminho) - 1
-    
-    while i < aux:
-        if caminho[i] == u:
-            try:
-                novo_caminho = swap(u,v,w,k,novo_caminho)
-                i = caminho.index(caminho[i]) + 4
-            except IndexError:
-                novo_caminho = swap(u,v,w,k,novo_caminho)
-                break
+def construtor(u, v, caminho, distancias, w=None, k=None, tipo=False):
+    if (w and k) is not None:
+        _x, _y = caminho.index(u), caminho.index(w)
+        x, y = caminho.index(v), caminho.index(k)
+
+        if tipo:
+            caminho[_x], caminho[_y] = caminho[_y], caminho[_x]
+            caminho[x], caminho[y] = caminho[y], caminho[x]
         else:
-            novo_caminho.append(caminho[i])
-            i += 1
+            caminho[x], caminho[_y] = caminho[_y], caminho[x]
+    else:
+        _x, _y = caminho.index(u), caminho.index(v)
+        caminho[_x], caminho[_y] = caminho[_y], caminho[_x]
 
-    novo_caminho.append(caminho[0])
-    dist_total = distanciagetter(novo_caminho, distancias)
-    return (dist_total, novo_caminho)
+    caminho[-1] = caminho[0]
+    dist_total = distanciagetter(caminho, distancias)
+    return (dist_total, caminho)
 
-def swap(u,v,w,k,novo_caminho):
-    novo_caminho.append(u)
-    novo_caminho.append(w)
-    novo_caminho.append(v)
-    novo_caminho.append(k)
-    return novo_caminho
 
-def distanciagetter(novo_caminho, distancias):
+def distanciagetter(caminho, distancias):
     dist = 0
-    for i in range(len(novo_caminho) - 1):
-        for j in distancias.get(novo_caminho[i]):
-            if j[0] == novo_caminho[i + 1]:
+    for i in range(len(caminho) - 1):
+        for j in distancias.get(caminho[i]):
+            if j[0] == caminho[i + 1]:
                 dist += j[1]
                 break
     return dist

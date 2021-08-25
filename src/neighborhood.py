@@ -7,17 +7,18 @@
 from collections import defaultdict
 from construtiva import construtor
 from numpy import random
+from copy import deepcopy
 
 def vizinhança(operador, s, distancias):
     arestas = arestasgetter(s[1])
-
     if operador == 0:
         return opt_2(arestas, distancias, caminho=s[1])
     elif operador == 1:
-        t = random.randint(0, 1)
+        #t = random.randint(0, 1) 
+        t = 1
         if t == 0:
-            return or_opt1(arestas, distancias, caminho=s[1])
-        #return or_opt2(arestas, caminho=s[1])
+            return or_opt1(distancias, caminho=s[1])
+        return or_opt2(distancias, caminho=s[1], custo=s[0])
 
     '''elif operador == 2:
         return opt_3(arestas, caminho=s[1], custo_inicial=s[0])
@@ -36,23 +37,45 @@ def opt_2(arestas, distancias, caminho):
             if u == k or v == w or arestas[i] == arestas[j] or ((arestas[j], arestas[i])) in visitadas:
                 continue
             visitadas.append((arestas[i], arestas[j]))
-            h_linha = construtor(u, v, w, k, caminho, distancias)
+            h_linha = construtor(u, v, deepcopy(caminho), distancias, w, k)
             espaco_solucoes.append(h_linha)
         melhores.append(encontra_melhor_vizinho(espaco_solucoes))
-    return list(set(melhores)) 
+        espaco_solucoes.clear()
+    return melhores
+
+    
+def or_opt1(distancias, caminho):
+    espaco_solucoes = []
+    melhores = []
+
+    for i in range(len(caminho) - 2):
+        for j in range(i + 1, len(caminho) - 1):
+            u, v = caminho[i], caminho[j]
+            h_linha = construtor(u, v, deepcopy(caminho), distancias)
+            espaco_solucoes.append(h_linha)
+        melhores.append(encontra_melhor_vizinho(espaco_solucoes))
+        espaco_solucoes.clear()
+    return melhores 
+
+
+def or_opt2(distancias, caminho, custo):
+    espaco_solucoes = []
+    melhores = []
+
+    for i in range(len(caminho) - 4):
+        for j in range(i + 2, len(caminho) - 1):
+            u, v, w, k = caminho[i], caminho[i + 1], caminho[j], caminho[j + 1]
+            h_linha = construtor(u, v, deepcopy(caminho), distancias, w, k, True)
+            espaco_solucoes.append(h_linha)
+        melhores.append(encontra_melhor_vizinho(espaco_solucoes))
+        espaco_solucoes.clear()
+    return melhores 
+
+
 
 def encontra_melhor_vizinho(N):
     N.sort(key=lambda y: y[0])
     return N[0]
-
-    
-def or_opt1(arestas, distancias, caminho):
-    espaco_solucoes = []
-    for i in range(len(caminho)):
-        for j in range(i+ 1, len(caminho)):
-            print(i, j)
-            #Remover caminho[i] e inserir em caminho[j]
-
 
 def arestasgetter(vertices):
     arestas = []

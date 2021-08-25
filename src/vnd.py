@@ -9,7 +9,7 @@ def VND(s_inicial, distancias):
     k = 0
 
     while k < vizinhanças:
-        s_linha = vizinhança(k, s, distancias)
+        s_linha = vizinhança(1, s, distancias)
         if fitness(s_linha) < fitness(s):
             s = s_linha
             k = 0
