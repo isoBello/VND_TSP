@@ -10,7 +10,7 @@ def calculadora(vertices, coordenadas, tipo):
         _x, _y = coordenadas.get(i)[0], coordenadas.get(i)[1]
         for k, v in coordenadas.items():
             if k == i:
-                pass
+                continue
             
             x, y = v[0], v[1]
             distancias[i].append((k, calcular_distancia(_x,_y, x, y, tipo)))
@@ -24,9 +24,9 @@ def calcular_distancia(_x, _y, x, y, tipo):
     
     
     if tipo == 0:
-        geo(long_a - long_b, lat_a, lat_b, long_a, long_b)
+        return geo(long_a - long_b, lat_a, lat_b, long_a, long_b)
     else:
-        euc(_x - x, _y - y)
+        return euc(_x - x, _y - y)
 
 
 def geo(y, lat_a, lat_b, long_a, long_b):

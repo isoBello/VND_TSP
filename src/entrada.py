@@ -2,23 +2,29 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from .distancias import calculadora
-from .vnd import Main
+import re
+from distancias import calculadora
+from vnd import Main
 
 def Grafo():
     header = []
-    with open(sys.argv[1]) as f:
+    coordenadas = {}
+    #filename = sys.argv[1]
+    filename = "Data/burma14.tsp"
+    with open(filename) as f:
         for line in iter(lambda: f.readline().rstrip(), 'NODE_COORD_SECTION'):
             header.append(line)
         qtd_vertices, tipo_dist = infogetter(header)
            
         line = next(f)
-        while 'EOF' not in line:
-            v, x, y = valuesgetter(line)
-            coordenadas[v] = (x, y)
-            line = next(f)
-
-    return qtd_vertices + 1, coordenadas, tipo_dist
+        while True:
+            try:
+                v, x, y = valuesgetter(line)
+                coordenadas[v] = (x, y)
+                line = next(f)
+            except (TypeError, IndexError):
+                break
+        return qtd_vertices + 1, coordenadas, tipo_dist
            
 
 def infogetter(head):
@@ -31,14 +37,8 @@ def infogetter(head):
 
 
 def valuesgetter(line):
-    values = line.split(" ")
-    try:
-        v = int(values[0])
-        x = float(values[1])
-        y = float(values[2])
-        return v, x, y
-    except ValueError:
-        pass
+    regex = re.findall("[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", line)
+    return int(regex[0]), float(regex[1]), float(regex[2])
 
 if __name__ == "__main__":
     vertices, coordenadas, tipo_dist = Grafo()

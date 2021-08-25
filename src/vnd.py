@@ -1,7 +1,7 @@
 #!/VND_TSP/virtual/bin python3.6
 # -*- coding: utf-8 -*-
-from .construtiva import heuristica_construtiva
-from .neighborhood import vizinhança
+from construtiva import heuristica_construtiva
+from neighborhood import vizinhança
 
 def VND(s_inicial):
     vizinhanças = 4
