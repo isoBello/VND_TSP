@@ -4,15 +4,16 @@
 import sys
 import re
 from distancias import calculadora
-from vnd import MainVND
-from vns import MainVNS
+""" from vnd import MainVND
+from vns import MainVNS """
+from saida import grafo
+
 
 def Grafo():
     header = []
     coordenadas = {}
-    #filename = sys.argv[1]
-    filename = "Data/burma14.tsp"
-    with open(filename) as f:
+
+    with open(sys.argv[1]) as f:
         for line in iter(lambda: f.readline().rstrip(), 'NODE_COORD_SECTION'):
             header.append(line)
         qtd_vertices, tipo_dist = infogetter(header)
@@ -49,5 +50,4 @@ if __name__ == "__main__":
     else:
         distancias = calculadora(vertices, coordenadas, 1)
 
-    solucao = MainVND(vertices, distancias)
-    solucao = MainVNS(vertices, distancias)
+    grafo(vertices, distancias)
