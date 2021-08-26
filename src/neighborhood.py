@@ -1,29 +1,21 @@
 #!/VND_TSP/virtual/bin python3.6
 # -*- coding: utf-8 -*-
-
-
 # s é a solução inicial (partida) de cada vizinhança
-
 from collections import defaultdict
-from construtiva import construtor
+from construtiva import construtor, reversaogetter, distanciagetter
 from numpy import random
 from copy import deepcopy
 
-def vizinhança(operador, s, distancias):
-    arestas = arestasgetter(s[1])
+def neighborhood(operador, s, distancias):
     if operador == 0:
+        arestas = arestasgetter(s[1])
         return opt_2(arestas, distancias, caminho=s[1])
     elif operador == 1:
-        #t = random.randint(0, 1) 
-        t = 1
-        if t == 0:
-            return or_opt1(distancias, caminho=s[1])
-        return or_opt2(distancias, caminho=s[1], custo=s[0])
-
-    '''elif operador == 2:
-        return opt_3(arestas, caminho=s[1], custo_inicial=s[0])
+        return or_opt1(distancias, caminho=s[1])
+    elif operador == 2:
+        return or_opt2(distancias, caminho=s[1])
     else:
-        return swap(arestas, caminho=s[1], custo_inicial=s[0]) '''
+        return opt_3(distancias, caminho=s[1])
     
 
 def opt_2(arestas, distancias, caminho):
@@ -39,9 +31,15 @@ def opt_2(arestas, distancias, caminho):
             visitadas.append((arestas[i], arestas[j]))
             h_linha = construtor(u, v, deepcopy(caminho), distancias, w, k)
             espaco_solucoes.append(h_linha)
+
         melhores.append(encontra_melhor_vizinho(espaco_solucoes))
         espaco_solucoes.clear()
-    return melhores
+
+    try:
+        melhores.sort(key = lambda x: x[0])
+    except TypeError:
+        pass
+    return melhores[0]
 
     
 def or_opt1(distancias, caminho):
@@ -55,10 +53,15 @@ def or_opt1(distancias, caminho):
             espaco_solucoes.append(h_linha)
         melhores.append(encontra_melhor_vizinho(espaco_solucoes))
         espaco_solucoes.clear()
-    return melhores 
+
+    try:
+        melhores.sort(key = lambda x: x[0])
+    except TypeError:
+        pass
+    return melhores[0]
 
 
-def or_opt2(distancias, caminho, custo):
+def or_opt2(distancias, caminho):
     espaco_solucoes = []
     melhores = []
 
@@ -69,13 +72,34 @@ def or_opt2(distancias, caminho, custo):
             espaco_solucoes.append(h_linha)
         melhores.append(encontra_melhor_vizinho(espaco_solucoes))
         espaco_solucoes.clear()
-    return melhores 
+    
+    try:
+        melhores.sort(key = lambda x: x[0])
+    except TypeError:
+        pass
+    return melhores[0]
 
+def opt_3(distancias, caminho):
+    while True:
+        delta = 0 
+        for(a, b, c) in segmentos(len(caminho)):
+            delta += reversaogetter(caminho, a, b, c, distancias)
+        if delta >= 0:
+            break
+    return (distanciagetter(caminho, distancias), caminho)
 
+def segmentos(N):
+    return ((i, j, k)
+        for i in range(N)
+        for j in range(i + 2, N)
+        for k in range(j + 2, N + (i > 0)))
 
 def encontra_melhor_vizinho(N):
-    N.sort(key=lambda y: y[0])
-    return N[0]
+    try:
+        N.sort(key=lambda y: y[0])
+        return N[0][0], N[0][1]
+    except IndexError:
+        pass
 
 def arestasgetter(vertices):
     arestas = []

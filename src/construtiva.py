@@ -59,11 +59,40 @@ def construtor(u, v, caminho, distancias, w=None, k=None, tipo=False):
     return (dist_total, caminho)
 
 
-def distanciagetter(caminho, distancias):
+def distanciagetter(caminho, distancias, u=None, v=None):
     dist = 0
-    for i in range(len(caminho) - 1):
-        for j in distancias.get(caminho[i]):
-            if j[0] == caminho[i + 1]:
-                dist += j[1]
-                break
+
+    if (u and v) is not None:
+        for w in distancias.get(u):
+            if v == w[0]:
+                dist = w[1]
+    else:
+        for i in range(len(caminho) - 1):
+            for j in distancias.get(caminho[i]):
+                if j[0] == caminho[i + 1]:
+                    dist += j[1]
+                    break
     return dist
+
+def reversaogetter(caminho, u, v, w, distancias):
+    A, B, C, D, E, F = caminho[u - 1], caminho[u], caminho[v - 1], caminho[v], caminho[w - 1], caminho[w % len(caminho)]
+    d0 = distanciagetter(caminho, distancias, A, B) + distanciagetter(caminho, distancias, C, D) + distanciagetter(caminho, distancias, E, F)
+    d1 = distanciagetter(caminho, distancias, A, C) + distanciagetter(caminho, distancias, B, D) + distanciagetter(caminho, distancias, E, F)
+    d2 = distanciagetter(caminho, distancias, A, B) + distanciagetter(caminho, distancias, C, E) + distanciagetter(caminho, distancias, D, F)
+    d3 = distanciagetter(caminho, distancias, A, D) + distanciagetter(caminho, distancias, E, B) + distanciagetter(caminho, distancias, C, F)
+    d4 = distanciagetter(caminho, distancias, F, B) + distanciagetter(caminho, distancias, C, D) + distanciagetter(caminho, distancias, E, A)
+
+    if d0 > d1:
+        caminho[u : v] = reversed(caminho[u : v])
+        return -d0 + d1
+    elif d0 > d2:
+        caminho[v : w] = reversed(caminho[v : w])
+        return -d0 + d2
+    elif d0 > d4:
+        caminho[u : w] = reversed(caminho[u : w])
+        return -d0 + d4
+    elif d0 > d3:
+        tmp = caminho[v : w] + caminho[u : v]
+        caminho[u : w] = tmp
+        return -d0 + d3
+    return 0

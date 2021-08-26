@@ -4,7 +4,8 @@
 import sys
 import re
 from distancias import calculadora
-from vnd import Main
+from vnd import MainVND
+from vns import MainVNS
 
 def Grafo():
     header = []
@@ -48,4 +49,5 @@ if __name__ == "__main__":
     else:
         distancias = calculadora(vertices, coordenadas, 1)
 
-    solucao = Main(vertices, distancias)
+    solucao = MainVND(vertices, distancias)
+    solucao = MainVNS(vertices, distancias)
