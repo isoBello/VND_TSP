@@ -4,14 +4,13 @@ from construtiva import heuristica_construtiva
 from neighborhood import neighborhood
 from vnd import VND
 from saida import Main
-import sys
 import ast 
 
 
-def Grafo():
+def Grafo(filename):
     distancias = {}
 
-    with open(sys.argv[1]) as file:
+    with open(filename) as file:
         for line in file:
             key, value = line.split(":")
             distancias[int(key)] = ast.literal_eval(value)
@@ -37,7 +36,8 @@ def fitness(s):
     return s[0]
 
 
-if __name__ == "__main__":
-    vertices, distancias = Grafo()
+def main_vns(filename, iteracao, algoritmo, n_arq):
+    vertices, distancias = Grafo(filename)
     s_inicial = heuristica_construtiva(vertices, distancias)
-    Main(VNS_VND(s_inicial, distancias))
+    solucao = VNS_VND(s_inicial, distancias)
+    Main(iteracao, algoritmo, n_arq, solucao[0])

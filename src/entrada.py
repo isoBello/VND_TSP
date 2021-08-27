@@ -1,19 +1,15 @@
 #!/VND_TSP/virtual/bin python3.6
 # -*- coding: utf-8 -*-
-
-import sys
 import re
 from distancias import calculadora
-""" from vnd import MainVND
-from vns import MainVNS """
 from saida import grafo
 
 
-def Grafo():
+def Grafo(filename):
     header = []
     coordenadas = {}
 
-    with open(sys.argv[1]) as f:
+    with open(filename) as f:
         for line in iter(lambda: f.readline().rstrip(), 'NODE_COORD_SECTION'):
             header.append(line)
         qtd_vertices, tipo_dist = infogetter(header)
@@ -42,12 +38,12 @@ def valuesgetter(line):
     regex = re.findall("[-+]?[.]?[\d]+(?:,\d\d\d)*[\.]?\d*(?:[eE][-+]?\d+)?", line)
     return int(regex[0]), float(regex[1]), float(regex[2])
 
-if __name__ == "__main__":
-    vertices, coordenadas, tipo_dist = Grafo()
+def main(filename, output):
+    vertices, coordenadas, tipo_dist = Grafo(filename)
 
     if "GEO" in tipo_dist:
         distancias = calculadora(vertices, coordenadas, 0)
     else:
         distancias = calculadora(vertices, coordenadas, 1)
 
-    grafo(vertices, distancias)
+    grafo(vertices, distancias, output)
